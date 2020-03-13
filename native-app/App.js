@@ -1,15 +1,30 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Button, TextInput } from "react-native";
+import { StyleSheet, Text, View, Button, TextInput, ScrollView, FlatList } from "react-native";
+import GoalItem from './components/GoalItem';
+import GoalInput from './components/GoalInput';
 
 export default function App() {
-  const [outputText, setoutputText] = useState("welcome to react");
+
+  const [courseGoals, setCourseGoals] = useState([]);
+
+
+
+  const addGoal = goalTitle => {
+    setCourseGoals(courseGoals => [...courseGoals,
+    { id: Math.random(), value: goalTitle }]);
+  }
+
   return (
     <View style={styles.screen}>
-      <View style={styles.inputContainer}>
-        <TextInput placeholder="Course Goal" style={styles.inputText} />
-        <Button title="Add" />
-      </View>
-      <View></View>
+      <GoalInput onAddGoal={addGoal} />
+      <FlatList
+        keyExtractor={(item, index) => item.id}
+        data={courseGoals}
+        renderItem={itemData =>
+          <GoalItem 
+          onDelete={() => console.log('press event')} 
+          title={itemData.item.value} />}
+      />
     </View>
   );
 }
@@ -17,16 +32,5 @@ export default function App() {
 const styles = StyleSheet.create({
   screen: {
     padding: 50
-  },
-  inputText: {
-    borderColor: "black",
-    borderWidth: 1,
-    padding: 10,
-    width: "80%"
-  },
-  inputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
   }
 });
